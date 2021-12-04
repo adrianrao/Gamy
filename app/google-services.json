@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "498580466056",
+    "project_id": "gamy-5b453",
+    "storage_bucket": "gamy-5b453.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:498580466056:android:57d2fb4dca98766951723d",
+        "android_client_info": {
+          "package_name": "com.oar.gamy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "498580466056-r0o51bg1539il9jm7l7spjmg9le5h2ij.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.oar.gamy",
+            "certificate_hash": "e82c97963fa00defe4ebde3fa1f5a264631c708d"
+          }
+        },
+        {
+          "client_id": "498580466056-ob8boa9dfgdva4jcojrk2fqsf446rua9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCPF19f5o4Ar1N02l5ek-IZ2Yhh-BCCxUg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "498580466056-ob8boa9dfgdva4jcojrk2fqsf446rua9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

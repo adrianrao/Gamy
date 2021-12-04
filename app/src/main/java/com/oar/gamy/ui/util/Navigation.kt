@@ -9,6 +9,7 @@ import com.oar.gamy.ui.view.chat.ChatScreen
 import com.oar.gamy.ui.view.home.HomeScreen
 import com.oar.gamy.ui.view.login.LoginScreen
 import com.oar.gamy.ui.view.players.PlayersScreen
+import com.oar.gamy.ui.view.register.RegisterScreen
 import com.oar.gamy.ui.view.rental.RentalScreen
 import com.oar.gamy.ui.view.splash.SplashScreen
 
@@ -35,6 +36,9 @@ fun Navigation(navController: NavHostController) {
         }
         composable(Screen.AccountScreen.route){
             AccountScreen(navController = navController)
+        }
+        composable(Screen.RegisterScreen.route){
+            RegisterScreen(navController = navController)
         }
     }
 }

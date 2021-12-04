@@ -1,13 +1,12 @@
-package com.oar.gamy.ui.view.login
+package com.oar.gamy.ui.view.register
 
-import android.graphics.Paint
 import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -17,7 +16,6 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.oar.gamy.R
@@ -28,12 +26,11 @@ import com.oar.gamy.ui.view.component.CustomTextField
 import com.oar.gamy.util.Constants
 
 @Composable
-fun LoginScreen(
+fun RegisterScreen(
     navController: NavHostController,
-    viewModel: LoginViewModel = viewModel()
+    viewModel: RegisterViewModel = viewModel()
 ) {
     val state = viewModel.state.value
-    
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -48,111 +45,126 @@ fun LoginScreen(
             verticalArrangement = Arrangement.Center,
             modifier = Modifier
                 .fillMaxSize()
-                .align(Alignment.Center)
+                .align(Alignment.Center),
         ) {
             Text(
-                text = stringResource(id = R.string.login),
-                style = MaterialTheme.typography.h1,
+                text = stringResource(id = R.string.register),
+                style = MaterialTheme.typography.h1
             )
             Spacer(modifier = Modifier.height(SpaceMedium))
             CustomTextField(
                 text = state.emailText,
                 onValueChange = {
-                    viewModel.onEvent(LoginEvent.EnteredEmail(it))
+                    viewModel.onEvent(RegisterEvent.EnteredEmail(it))
                 },
-                keyboardType = KeyboardType.Email,
                 error = when (state.emailError) {
-                    LoginState.EmailError.FieldEmpty -> {
+                    RegisterState.EmailError.FieldEmpty -> {
                         stringResource(id = R.string.this_field_cant_be_empty)
                     }
-                    LoginState.EmailError.InvalidEmail -> {
+                    RegisterState.EmailError.InvalidEmail -> {
                         stringResource(id = R.string.this_not_valid_email)
                     }
                     null -> ""
                 },
-                hint = stringResource(id = R.string.login_hint)
+                keyboardType = KeyboardType.Email,
+                hint = stringResource(id = R.string.email)
+            )
+            Spacer(modifier = Modifier.height(SpaceMedium))
+            CustomTextField(
+                text = state.usernameText,
+                onValueChange = {
+                    viewModel.onEvent(RegisterEvent.EnteredUsername(it))
+                },
+                error = when (state.usernameError) {
+                    RegisterState.UsernameError.FieldEmpty -> {
+                        stringResource(id = R.string.this_field_cant_be_empty)
+                    }
+                    RegisterState.UsernameError.InputTooShort -> {
+                        stringResource(id = R.string.input_too_short, Constants.MIN_USERNAME_LENGTH)
+                    }
+                    null -> ""
+                },
+                hint = stringResource(id = R.string.username)
             )
             Spacer(modifier = Modifier.height(SpaceMedium))
             CustomTextField(
                 text = state.passwordText,
                 onValueChange = {
-                    viewModel.onEvent(LoginEvent.EnteredPassword(it))
+                    viewModel.onEvent(RegisterEvent.EnteredPassword(it))
                 },
                 hint = stringResource(id = R.string.password_hint),
                 keyboardType = KeyboardType.Password,
                 error = when (state.passwordError) {
-                    LoginState.PasswordError.FieldEmpty -> {
+                    RegisterState.PasswordError.FieldEmpty -> {
                         stringResource(id = R.string.this_field_cant_be_empty)
                     }
-                    LoginState.PasswordError.InputTooShort -> {
+                    RegisterState.PasswordError.InputTooShort -> {
                         stringResource(id = R.string.input_too_short, Constants.MIN_PASSWORD_LENGTH)
                     }
-                    LoginState.PasswordError.InvalidPassword -> {
+                    RegisterState.PasswordError.InvalidPassword -> {
                         stringResource(id = R.string.invalid_password)
                     }
                     null -> ""
                 },
                 isPasswordVisible = state.isPasswordVisible,
                 onPasswordToggleClick = {
-                    viewModel.onEvent(LoginEvent.TogglePasswordVisibility)
+                    viewModel.onEvent(RegisterEvent.TogglePasswordVisibility)
                 }
             )
             Spacer(modifier = Modifier.height(SpaceMedium))
             Button(
-                modifier = Modifier.align(Alignment.End),
                 onClick = {
-                    if (state.isAuthenticate) {
+                    viewModel.onEvent(RegisterEvent.Register)
+                    if (state.isSuccessRegistration) {
                         navController.popBackStack()
-                        navController.navigate(
-                            Screen.HomeScreen.route
-                        )
                     }
-                    viewModel.onEvent(LoginEvent.Login)
-                }
+                },
+                modifier = Modifier
+                    .align(Alignment.End)
             ) {
                 Text(
-                    text = stringResource(id = R.string.login),
+                    text = stringResource(id = R.string.register),
                     color = MaterialTheme.colors.onPrimary
                 )
             }
         }
-        Text(text = buildAnnotatedString {
-            append(stringResource(id = R.string.dont_have_an_account_yet))
-            append(" ")
-            val signUpText =
-                stringResource(id = R.string.sign_up)
-            withStyle(
-                style = SpanStyle(
-                    color = MaterialTheme.colors.primary
-                )
-            ) {
-                append(signUpText)
-            }
-        }, style = MaterialTheme.typography.body1,
+        Text(
+            text = buildAnnotatedString {
+                append(stringResource(id = R.string.already_have_an_account))
+                append(" ")
+                val signUpText = stringResource(id = R.string.sign_in)
+                withStyle(
+                    style = SpanStyle(
+                        color = MaterialTheme.colors.primary
+                    )
+                ) {
+                    append(signUpText)
+                }
+            },
+            style = MaterialTheme.typography.body1,
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .clickable {
-                    navController.navigate(
-                        Screen.RegisterScreen.route
-                    )
-                })
-
-        val message = when (state.authenticateError) {
-            LoginState.AuthenticateError.InvalidCredentials -> {
-                stringResource(id = R.string.auth_invalid_credentials)
-            }
-            LoginState.AuthenticateError.VerifyEmail -> {
-                stringResource(id = R.string.auth_verify_email)
-            }
-            LoginState.AuthenticateError.UserNotExist -> {
-                stringResource(id = R.string.auth_user_not_exist)
-            }
-            null -> ""
-        }
-        if (message.isNotEmpty()) {
-            Toast.makeText(
-                LocalContext.current, message, Toast.LENGTH_SHORT
-            ).show()
-        }
+                    navController.popBackStack()
+                    navController.navigate(Screen.LoginScreen.route)
+                }
+        )
     }
+
+    val message = when (state.registrationMessage) {
+        RegisterState.RegisterMessage.AlreadyExistUser -> {
+            stringResource(id = R.string.user_already_exist)
+        }
+        RegisterState.RegisterMessage.UserCreated -> {
+            stringResource(id = R.string.user_created)
+        }
+        null -> ""
+    }
+
+    if (message.isNotEmpty()) {
+        Toast.makeText(
+            LocalContext.current, message, Toast.LENGTH_SHORT
+        ).show()
+    }
+
 }

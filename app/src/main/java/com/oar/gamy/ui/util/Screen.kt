@@ -10,4 +10,5 @@ sealed class Screen(
     object PlayersScreen : Screen("players_screen")
     object RentalScreen : Screen("rental_screen")
     object AccountScreen : Screen("account_screen")
+    object RegisterScreen :Screen("register_screen")
 }
