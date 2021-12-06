@@ -8,8 +8,8 @@ data class RegisterState(
     val passwordText: String = "",
     val passwordError: PasswordError? = null,
     val isPasswordVisible: Boolean = false,
-    val isSuccessRegistration : Boolean =false,
-    val registrationMessage : RegisterMessage? = null
+    val isSuccessRegistration: Boolean = false,
+    val registrationMessage: RegisterMessage? = null
 ) {
     sealed class UsernameError {
         object FieldEmpty : UsernameError()
@@ -18,16 +18,16 @@ data class RegisterState(
 
     sealed class EmailError {
         object FieldEmpty : EmailError()
-        object InvalidEmail: EmailError()
+        object InvalidEmail : EmailError()
     }
 
     sealed class PasswordError {
-        object FieldEmpty: PasswordError()
+        object FieldEmpty : PasswordError()
         object InvalidPassword : PasswordError()
         object InputTooShort : PasswordError()
     }
 
-    sealed class RegisterMessage{
+    sealed class RegisterMessage {
         object AlreadyExistUser : RegisterMessage()
         object UserCreated : RegisterMessage()
     }

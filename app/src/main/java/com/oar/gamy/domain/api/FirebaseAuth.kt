@@ -9,7 +9,7 @@ class FirebaseAuth {
     private var auth: FirebaseAuth = Firebase.auth
 
     fun userIsLoged(): Boolean {
-        return auth.currentUser == null
+        return auth.currentUser != null
     }
 
     fun signInWithEmailAndPassword(
@@ -60,7 +60,7 @@ class FirebaseAuth {
         return auth.currentUser!!.isEmailVerified
     }
 
-    private fun signOut() {
+     fun signOut() {
         auth.signOut()
     }
 }

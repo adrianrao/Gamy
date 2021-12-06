@@ -22,4 +22,5 @@
     <string name="sign_in">Sign in!</string>
     <string name="user_already_exist">User already exist!</string>
     <string name="user_created">User created!</string>
+    <string name="sign_out">Sign Out</string>
 </resources>

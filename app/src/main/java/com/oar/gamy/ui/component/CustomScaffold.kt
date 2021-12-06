@@ -62,6 +62,7 @@ fun CustomScaffold(
                             enabled = bottomNavItem.icon != null
                         ) {
                             if (navController.currentDestination?.route != bottomNavItem.route) {
+                                navController.popBackStack()
                                 navController.navigate(bottomNavItem.route)
                             }
                         }

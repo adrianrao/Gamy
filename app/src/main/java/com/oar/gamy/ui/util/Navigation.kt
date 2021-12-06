@@ -1,44 +1,125 @@
 package com.oar.gamy.ui.util
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.oar.gamy.domain.repository.UserRepository
 import com.oar.gamy.ui.view.account.AccountScreen
 import com.oar.gamy.ui.view.chat.ChatScreen
 import com.oar.gamy.ui.view.home.HomeScreen
 import com.oar.gamy.ui.view.login.LoginScreen
+import com.oar.gamy.ui.view.login.LoginViewModel
 import com.oar.gamy.ui.view.players.PlayersScreen
 import com.oar.gamy.ui.view.register.RegisterScreen
 import com.oar.gamy.ui.view.rental.RentalScreen
 import com.oar.gamy.ui.view.splash.SplashScreen
+import com.oar.gamy.ui.view.splash.SplashViewModel
 
 @Composable
 fun Navigation(navController: NavHostController) {
     NavHost(navController = navController, startDestination = Screen.SplashScreen.route) {
-        composable(Screen.SplashScreen.route) {
-            SplashScreen(navController = navController)
+        addSplash(navController)
+        addLogin(navController)
+        addHome(navController)
+        addChat(navController)
+        addPlayers(navController)
+        addRental(navController)
+        addAccount(navController)
+        addRegister(navController)
+    }
+}
+
+
+private fun NavGraphBuilder.addSplash(navController: NavHostController) {
+    composable(Screen.SplashScreen.route) {
+        val viewModel: SplashViewModel = viewModel()
+
+        SplashScreen(navController = navController) {
+            viewModel.onEvent(it)
         }
-        composable(Screen.LoginScreen.route) {
-            LoginScreen(navController = navController)
+
+        if(viewModel.state.value.isAuthenticate != null){
+            if (viewModel.state.value.isAuthenticate!!) {
+                LaunchedEffect(key1 = Unit) {
+                    navController.popBackStack()
+                    navController.navigate(Screen.HomeScreen.route)
+                }
+            }else{
+                LaunchedEffect(key1 = Unit) {
+                    navController.popBackStack()
+                    navController.navigate(Screen.LoginScreen.route)
+                }
+            }
         }
-        composable(Screen.HomeScreen.route) {
-            HomeScreen(navController = navController)
+
+    }
+}
+
+private fun NavGraphBuilder.addLogin(navController: NavHostController) {
+    composable(Screen.LoginScreen.route) {
+        val viewModel: LoginViewModel = viewModel()
+
+        if (viewModel.state.value.isAuthenticate) {
+            LaunchedEffect(key1 = Unit) {
+                navController.popBackStack()
+                navController.navigate(Screen.HomeScreen.route)
+            }
+        } else {
+            LoginScreen(
+                state = viewModel.state.value,
+                onNavigateToRegister = {
+                    navController.popBackStack()
+                    navController.navigate(Screen.RegisterScreen.route)
+                },
+                onEvent = {
+                    viewModel.onEvent(it)
+                }
+            )
         }
-        composable(Screen.ChatScreen.route) {
-            ChatScreen(navController = navController)
+    }
+}
+
+private fun NavGraphBuilder.addHome(navController: NavHostController) {
+    composable(Screen.HomeScreen.route) {
+        HomeScreen(navController = navController)
+    }
+}
+
+private fun NavGraphBuilder.addChat(navController: NavHostController) {
+    composable(Screen.ChatScreen.route) {
+        ChatScreen(navController = navController)
+    }
+}
+
+private fun NavGraphBuilder.addPlayers(navController: NavHostController) {
+    composable(Screen.PlayersScreen.route) {
+        PlayersScreen(navController = navController)
+    }
+}
+
+private fun NavGraphBuilder.addRental(navController: NavHostController) {
+    composable(Screen.RentalScreen.route) {
+        RentalScreen(navController = navController)
+    }
+}
+
+private fun NavGraphBuilder.addAccount(navController: NavHostController) {
+    composable(Screen.AccountScreen.route) {
+        AccountScreen(navController = navController){
+            val repository = UserRepository()
+            navController.popBackStack()
+            repository.signOut()
+            navController.navigate(Screen.LoginScreen.route)
         }
-        composable(Screen.PlayersScreen.route){
-            PlayersScreen(navController = navController)
-        }
-        composable(Screen.RentalScreen.route){
-            RentalScreen(navController = navController)
-        }
-        composable(Screen.AccountScreen.route){
-            AccountScreen(navController = navController)
-        }
-        composable(Screen.RegisterScreen.route){
-            RegisterScreen(navController = navController)
-        }
+    }
+}
+
+private fun NavGraphBuilder.addRegister(navController: NavHostController) {
+    composable(Screen.RegisterScreen.route) {
+        RegisterScreen(navController = navController)
     }
 }

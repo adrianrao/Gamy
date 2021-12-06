@@ -16,7 +16,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
 import com.oar.gamy.R
 import com.oar.gamy.util.Constants
-import com.oar.gamy.ui.util.Screen
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -25,7 +24,8 @@ import kotlinx.coroutines.withContext
 @Composable
 fun SplashScreen(
     navController: NavController,
-    dispacher: CoroutineDispatcher = Dispatchers.Main
+    dispacher: CoroutineDispatcher = Dispatchers.Main,
+    verifyUser: (SplashEvent) -> Unit
 ) {
     val scale = remember {
         Animatable(0f)
@@ -35,8 +35,8 @@ fun SplashScreen(
         OvershootInterpolator(2f)
     }
 
-    LaunchedEffect(key1 = true ){
-        withContext(dispacher){
+    LaunchedEffect(key1 = true) {
+        withContext(dispacher) {
             scale.animateTo(
                 targetValue = 0.5f,
                 animationSpec = tween(
@@ -47,8 +47,7 @@ fun SplashScreen(
                 )
             )
             delay(Constants.SPLASH_SCREEN_DURATION)
-            navController.popBackStack()
-            navController.navigate(Screen.LoginScreen.route)
+            verifyUser(SplashEvent.Authenticate)
         }
     }
 
@@ -56,7 +55,7 @@ fun SplashScreen(
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center,
-    ){
+    ) {
         Image(
             painter = painterResource(id = R.drawable.ic_launcher_foreground),
             contentDescription = "LOGO",
