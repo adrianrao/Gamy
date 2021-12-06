@@ -1,5 +1,6 @@
-package com.oar.gamy.ui.view.component
+package com.oar.gamy.ui.component
 
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
@@ -14,6 +15,7 @@ import androidx.navigation.NavController
 import com.oar.gamy.R
 import com.oar.gamy.domain.model.BottomNavItem
 import com.oar.gamy.ui.util.Screen
+import com.oar.gamy.ui.view.component.CustomBottomNavItem
 
 @Composable
 fun CustomScaffold(
@@ -44,13 +46,14 @@ fun CustomScaffold(
     onFabClick: () -> Unit = {},
     content: @Composable () -> Unit
 ) {
-    Scaffold(bottomBar = {
+    Scaffold(
+        modifier = Modifier.fillMaxWidth(),
+        bottomBar = {
         if(showBottomBar){
             BottomAppBar(
                 modifier = Modifier.fillMaxWidth(),
                 backgroundColor = MaterialTheme.colors.surface,
                 cutoutShape = CircleShape,
-                elevation = 5.dp
             ){
                 BottomNavigation{
                     bottomNavItems.forEach{ bottomNavItem ->
@@ -90,3 +93,4 @@ fun CustomScaffold(
         content()
     }
 }
+
