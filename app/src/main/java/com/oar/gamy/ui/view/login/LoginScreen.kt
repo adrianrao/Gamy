@@ -1,14 +1,15 @@
 package com.oar.gamy.ui.view.login
 
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -16,10 +17,10 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.oar.gamy.R
-import com.oar.gamy.ui.component.CustomAlertDialog
 import com.oar.gamy.ui.theme.SpaceLarge
 import com.oar.gamy.ui.theme.SpaceMedium
 import com.oar.gamy.ui.view.component.CustomTextField
+import com.oar.gamy.ui.view.register.RegisterEvent
 import com.oar.gamy.util.Constants
 
 @Composable
@@ -122,22 +123,23 @@ fun LoginScreen(
                 .clickable {
                     onNavigateToRegister()
                 })
-
-        val message = when (state.authenticateError) {
-            LoginState.AuthenticateError.InvalidCredentials -> {
-                stringResource(id = R.string.auth_invalid_credentials)
-            }
-            LoginState.AuthenticateError.VerifyEmail -> {
-                stringResource(id = R.string.auth_verify_email)
-            }
-            LoginState.AuthenticateError.UserNotExist -> {
-                stringResource(id = R.string.auth_user_not_exist)
-            }
-            null -> ""
+    }
+    val message = when (state.authenticateError) {
+        LoginState.AuthenticateError.InvalidCredentials -> {
+            stringResource(id = R.string.auth_invalid_credentials)
         }
-        if (message.isNotEmpty()) {
-            CustomAlertDialog(mutableStateOf(true))
+        LoginState.AuthenticateError.VerifyEmail -> {
+            stringResource(id = R.string.auth_verify_email)
         }
-
+        LoginState.AuthenticateError.UserNotExist -> {
+            stringResource(id = R.string.auth_user_not_exist)
+        }
+        null -> ""
+    }
+    if (message.isNotEmpty()) {
+        Toast.makeText(
+            LocalContext.current, message, Toast.LENGTH_SHORT
+        ).show()
+        onEvent(LoginEvent.ResetMessageError)
     }
 }

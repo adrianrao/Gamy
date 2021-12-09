@@ -38,7 +38,11 @@ class LoginViewModel : ViewModel() {
                 validatePassword(_state.value.passwordText)
                 authenticateUser()
             }
-
+            is LoginEvent.ResetMessageError -> {
+                _state.value = state.value.copy(
+                    authenticateError = null
+                )
+            }
         }
     }
 
